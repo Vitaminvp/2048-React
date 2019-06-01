@@ -14,69 +14,74 @@ import {
 } from './helpers';
 
 class App extends Component {
-  state = this.getNewState();
+  state = {
+    cells: initCells(),
+    score: 0,
+    bestScore: 0
+  };
 
   mapKeyCodeToDirection = {
-    KeyA: directions.LEFT,
-    KeyS: directions.DOWN,
-    KeyD: directions.RIGHT,
-    KeyW: directions.UP
+    ArrowLeft: directions.LEFT,
+    ArrowDown: directions.DOWN,
+    ArrowRight: directions.RIGHT,
+    ArrowUp: directions.UP
   };
 
-  newGame = () => {
-    this.setState(this.getNewState());
-  };
-
-  getNewState() {
-    return {
+  startNewGame = () => {
+    this.setState({
       cells: initCells(),
-      score: 0
-    };
-  }
+      score: 0,
+    });
+  };
 
   componentDidMount() {
-    document.addEventListener('keypress', this.handleKeyPress);
+    document.addEventListener('keydown', this.handleKeyPress);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keypress', this.handleKeyPress);
+    document.removeEventListener('keydown', this.handleKeyPress);
   }
 
   handleKeyPress = async event => {
-    if (['KeyA', 'KeyS', 'KeyD', 'KeyW'].includes(event.code))
+    if (['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp'].includes(event.code)) {
       this.setState(state => ({
         ...state,
         cells: moveCells(state.cells, this.mapKeyCodeToDirection[event.code])
       }));
 
-    await delay(100);
-    this.setState(state => ({
-      ...state,
-      cells: removeAndIncreaseCells(state.cells)
-    }));
-    this.setState(state => ({
-      ...state,
-      cells: populateField(state.cells)
-    }));
+      await delay(100);
+      this.setState(state => ({
+        ...state,
+        cells: removeAndIncreaseCells(state.cells)
+      }));
+      this.setState(state => ({
+        ...state,
+        cells: populateField(state.cells)
+      }));
+    }
+
   };
 
   render() {
-    const { cells, score } = this.state;
-
+    const { cells, score, bestScore } = this.state;
     return (
       <Layout>
         <H1>2048</H1>
         <ControlPanel>
           <COLLEFT>
-            <Button onClick={this.newGame}>New Game</Button>
+            <Button onClick={this.startNewGame}>New Game</Button>
           </COLLEFT>
           <COLRIGHT>
             <Score title="Score">{score}</Score>
-            <Score title="Best">{score}</Score>
+            <Score title="Best Score">{bestScore}</Score>
           </COLRIGHT>
         </ControlPanel>
 
         <Field cells={cells} />
+        <p>
+          <strong>How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles.
+          When two tiles with the same number touch, they <strong>merge into one!</strong>
+        </p>
       </Layout>
     );
   }
@@ -106,8 +111,8 @@ const H1 = styled.h1`
     transform: translateX(-50%);
     opacity: 0.5;
   }
-  :hover{
-    ::before{
+  :hover {
+    ::before {
       content: 'Join the numbers and get to the 2048 tile!';
     }
   }
@@ -122,4 +127,5 @@ const COLRIGHT = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
 export default App;

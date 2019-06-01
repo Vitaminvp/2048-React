@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
+import { calculateBackgroundColor } from '../../helpers';
 
 class Field extends PureComponent {
   static defaultProps = {
@@ -72,16 +73,5 @@ const Cell = styled(BackgroundCell)`
   font-size: ${({ value }) =>
     value < 100 ? 66 : value < 1000 ? 47 : value < 10000 ? 40 : 30}px;
 `;
-
-const calculateBackgroundColor = value => {
-  if (value === 0) {
-    return 'transparent';
-  }
-  // from 0 to 16
-  const step = Math.min(16, Math.log2(value));
-  return `hsl(0, ${calculateSaturation(step)}%, ${calculateLightness(step)}%);`;
-};
-const calculateSaturation = step => Math.floor((100 / 16) * step);
-const calculateLightness = step => 100 - Math.floor((50 / 16) * step);
 
 export default Field;

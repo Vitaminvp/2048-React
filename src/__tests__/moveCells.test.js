@@ -1,5 +1,5 @@
-import { create, cellStates } from '../cellManager'
-import { moveCells, directions } from '../moveCells'
+import { create, cellStates } from '../helpers'
+import { moveCells, directions } from '../helpers'
 
 const finalPositions = {
     [directions.UP]: {
@@ -30,7 +30,7 @@ const finalPositions = {
         id: 'test',
         state: cellStates.MOVING,
     },
-}
+};
 
 Object.keys(directions).forEach(direction => {
     describe(`moving ${direction}`, () => {
@@ -42,7 +42,7 @@ Object.keys(directions).forEach(direction => {
             ])
         })
     })
-})
+});
 
 describe('INCREASING', () => {
     it('2 cells', () => {
@@ -64,4 +64,4 @@ describe('INCREASING', () => {
             },
         ])
     })
-})
+});
