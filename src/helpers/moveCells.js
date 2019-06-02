@@ -1,7 +1,6 @@
 import { cloneDeep } from 'lodash';
 import matrixRotate from 'matrix-rotate';
-import { cellStates } from '.';
-import { matrixLength } from '.';
+import { matrixLength, cellStates } from '.';
 
 const directions = {
   UP: 'UP',
@@ -39,19 +38,10 @@ const moveCells = (initCells, direction) => {
       matrix[x][y].y = y;
     }
   }
-
-  cells
-    .filter(cell => cell.by != null)
-    .forEach(cell => {
-      cell.x = cell.by.x;
-      cell.y = cell.by.y;
-      delete cell.by;
-    });
-
   return cells;
 };
 
-function moveCell(matrix, x, y) {
+const moveCell = (matrix, x, y) => {
   let nextRow = y - 1;
   let currentRow = y;
 
@@ -60,7 +50,6 @@ function moveCell(matrix, x, y) {
       matrix[x][nextRow] = matrix[x][currentRow];
       matrix[x][currentRow].state = cellStates.MOVING;
       matrix[x][currentRow] = 0;
-
       currentRow = nextRow;
     } else if (
       matrix[x][nextRow].value === matrix[x][currentRow].value &&
@@ -68,7 +57,6 @@ function moveCell(matrix, x, y) {
         matrix[x][nextRow].state === cellStates.MOVING)
     ) {
       matrix[x][nextRow].state = cellStates.DYING;
-      matrix[x][nextRow].by = matrix[x][currentRow];
       matrix[x][currentRow].state = cellStates.INCREASE;
       matrix[x][nextRow] = matrix[x][currentRow];
       matrix[x][currentRow] = 0;
@@ -76,12 +64,11 @@ function moveCell(matrix, x, y) {
     } else {
       break;
     }
-
     nextRow -= 1;
   }
-}
+};
 
-function rotateMatrixFromDirection(matrix, direction) {
+const rotateMatrixFromDirection = (matrix, direction) => {
   switch (direction) {
     case directions.LEFT:
       matrixRotate(matrix);
@@ -93,18 +80,17 @@ function rotateMatrixFromDirection(matrix, direction) {
       matrixRotate(matrix);
       break;
     case directions.RIGHT:
-
       matrixRotate(matrix);
       break;
     default:
       break;
   }
-}
-function rotateMatrixToDirection(matrix, direction) {
+};
+
+const rotateMatrixToDirection = (matrix, direction) => {
   switch (direction) {
     case directions.LEFT:
       matrixRotate(matrix);
-
       break;
     case directions.DOWN:
       matrixRotate(matrix);
@@ -118,21 +104,21 @@ function rotateMatrixToDirection(matrix, direction) {
     default:
       break;
   }
-}
+};
 
-function printMatrix(matrix) {
-  let printString = '[\n';
-
-  Array.from(new Array(matrixLength), (x, i) => i).forEach(colNum => {
-    printString += '  ';
-    printString += Array.from(new Array(matrixLength), (x, i) => i)
-      .map(rowNum => JSON.stringify(matrix[colNum][rowNum]).padStart(40, ' '))
-      .join(', ');
-    printString += ',\n';
-  });
-
-  printString += ']';
-  console.log(printString);
-}
+// function printMatrix(matrix) {
+//   let printString = '[\n';
+//
+//   Array.from(new Array(matrixLength), (x, i) => i).forEach(colNum => {
+//     printString += '  ';
+//     printString += Array.from(new Array(matrixLength), (x, i) => i)
+//       .map(rowNum => JSON.stringify(matrix[colNum][rowNum]).padStart(40, ' '))
+//       .join(', ');
+//     printString += ',\n';
+//   });
+//
+//   printString += ']';
+//   console.log(printString);
+// }
 
 export { moveCells, directions };

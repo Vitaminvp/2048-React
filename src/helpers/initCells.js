@@ -1,5 +1,4 @@
-import { create } from './cellManager';
-import { defaultCellValue, matrixLength } from '.';
+import { defaultCellValue, matrixLength, create } from '.';
 
 const initCells = () => {
   const cell1 = create(getRandomCoord(), getRandomCoord(), defaultCellValue);
@@ -14,4 +13,4 @@ const initCells = () => {
 
 const getRandomCoord = () => Math.floor(Math.random() * matrixLength);
 
-export default initCells;
+export { initCells, getRandomCoord };

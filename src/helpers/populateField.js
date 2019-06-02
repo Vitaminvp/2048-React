@@ -1,26 +1,28 @@
-import { create } from './cellManager';
+import { create, matrixLength, getRandomCoord, defaultCellValue } from '.';
 
-function populateField(cells) {
+const populateField = (cells, startNewGame) => {
   const occupiedCoords = new Set();
 
   cells.forEach(cell => {
-    occupiedCoords.add(cell.x * 4 + cell.y);
+    occupiedCoords.add(cell.x * matrixLength + cell.y);
   });
 
-  if (occupiedCoords.size === 16) return;
-
+  if (occupiedCoords.size === Math.pow(matrixLength, 2)) {
+    alert('all done');
+    startNewGame();
+    return;
+  }
   let x;
   let y;
   let startSize = occupiedCoords.size;
   do {
-    x = Math.floor(Math.random() * 4);
-    y = Math.floor(Math.random() * 4);
-
-    const sum = x * 4 + y;
+    x = getRandomCoord();
+    y = getRandomCoord();
+    const sum = x * matrixLength + y;
     occupiedCoords.add(sum);
   } while (startSize === occupiedCoords.size);
 
-  return [...cells, create(x, y, 2)];
-}
+  return [...cells, create(x, y, defaultCellValue)];
+};
 
 export { populateField };

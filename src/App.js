@@ -10,7 +10,8 @@ import {
   directions,
   initCells,
   removeAndIncreaseCells,
-  populateField
+  populateField,
+  increaseScore
 } from './helpers';
 
 class App extends Component {
@@ -28,10 +29,11 @@ class App extends Component {
   };
 
   startNewGame = () => {
-    this.setState({
+    this.setState(state => ({
+      ...state,
       cells: initCells(),
-      score: 0,
-    });
+      score: 0
+    }));
   };
 
   componentDidMount() {
@@ -43,7 +45,9 @@ class App extends Component {
   }
 
   handleKeyPress = async event => {
-    if (['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp'].includes(event.code)) {
+    if (
+      ['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp'].includes(event.code)
+    ) {
       this.setState(state => ({
         ...state,
         cells: moveCells(state.cells, this.mapKeyCodeToDirection[event.code])
@@ -56,10 +60,14 @@ class App extends Component {
       }));
       this.setState(state => ({
         ...state,
-        cells: populateField(state.cells)
+        cells: populateField(state.cells, this.startNewGame),
+        score: state.score + increaseScore(state.cells)
+      }));
+      this.setState(state => ({
+        ...state,
+        bestScore: state.bestScore < state.score ? state.score : state.bestScore
       }));
     }
-
   };
 
   render() {
@@ -79,8 +87,9 @@ class App extends Component {
 
         <Field cells={cells} />
         <p>
-          <strong>How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles.
-          When two tiles with the same number touch, they <strong>merge into one!</strong>
+          <strong>How to play:</strong> Use your <strong>arrow keys</strong> to
+          move the tiles. When two tiles with the same number touch, they{' '}
+          <strong>merge into one!</strong>
         </p>
       </Layout>
     );
