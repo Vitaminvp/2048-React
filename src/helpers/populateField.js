@@ -1,6 +1,6 @@
 import { create, matrixLength, getRandomCoord, defaultCellValue } from '.';
 
-const populateField = (cells, startNewGame) => {
+const populateField = (cells, restartGame) => {
   const occupiedCoords = new Set();
 
   cells.forEach(cell => {
@@ -8,9 +8,8 @@ const populateField = (cells, startNewGame) => {
   });
 
   if (occupiedCoords.size === Math.pow(matrixLength, 2)) {
-    alert('all done');
-    startNewGame();
-    return;
+    restartGame();
+    return [];
   }
   let x;
   let y;
