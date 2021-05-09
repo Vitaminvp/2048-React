@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "gh-pages": "^2.0.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "matrix-rotate": "0.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
